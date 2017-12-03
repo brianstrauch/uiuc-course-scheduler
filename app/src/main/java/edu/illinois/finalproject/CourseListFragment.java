@@ -31,6 +31,11 @@ public class CourseListFragment extends Fragment {
         addButton = view.findViewById(R.id.fab_add);
         setAddButton();
 
+        // Fake data
+        for(int i = 0; i < 15; i++) {
+            courses.add(new Course("CS", 126));
+        }
+
         return view;
     }
 
@@ -55,7 +60,6 @@ public class CourseListFragment extends Fragment {
 
     private void openDialog() {
         CourseDialog addCourseDialog = new CourseDialog();
-        addCourseDialog.setTargetFragment(this, 0);
-        addCourseDialog.show(getFragmentManager(), "add course_item");
+        addCourseDialog.show(getFragmentManager(), "add course");
     }
 }

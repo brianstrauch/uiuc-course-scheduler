@@ -29,16 +29,12 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
 
     @Override
     public void onBindViewHolder(CourseHolder holder, int position) {
-        final Course course = courses.get(position);
-        holder.populate(course);
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
 
                 Intent courseDetailIntent = new Intent(context, CourseDetailActivity.class);
-                courseDetailIntent.putExtra("course", course);
                 context.startActivity(courseDetailIntent);
             }
         });
@@ -50,15 +46,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
     }
 
     public class CourseHolder extends RecyclerView.ViewHolder {
-        private TextView name;
-
         public CourseHolder(View view) {
             super(view);
-            name = view.findViewById(R.id.tv_course_name);
-        }
-
-        public void populate(Course course) {
-            name.setText(course.getId());
         }
     }
 }
