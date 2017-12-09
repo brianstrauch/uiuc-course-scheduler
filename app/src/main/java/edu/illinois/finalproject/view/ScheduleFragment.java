@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
@@ -25,11 +26,13 @@ import edu.illinois.finalproject.model.Schedule;
 import edu.illinois.finalproject.model.Time;
 
 public class ScheduleFragment extends Fragment {
+    private View view;
+
     private WeekView weekView;
     private Schedule schedule;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.schedule, container, false);
+        view = inflater.inflate(R.layout.schedule, container, false);
 
         weekView = view.findViewById(R.id.wv_calendar);
         setWeekView();
@@ -37,6 +40,13 @@ public class ScheduleFragment extends Fragment {
         schedule = new Schedule();
 
         return view;
+    }
+
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && !schedule.isPossible()) {
+            Toast.makeText(view.getContext(), "No possible schedules.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setWeekView() {
@@ -56,35 +66,65 @@ public class ScheduleFragment extends Fragment {
             public List<? extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
                 List<WeekViewEvent> events = new ArrayList<>();
 
-                // Only load current month
+                if(schedule.isPossible()) {
+                    weekView.setVisibility(View.VISIBLE);
+                } else {
+                    weekView.setVisibility(View.INVISIBLE);
+                    return events;
+                }
+
+                // Don't load previous or next month
                 if(newMonth != Calendar.getInstance().get(Calendar.MONTH) + 1) {
                     return events;
                 }
 
                 List<Course> courses = schedule.getCourses();
-                if(courses == null) return events; // TODO: Remove
+                if(courses == null) {
+                    return events;
+                }
 
-                for(int i = 0; i < courses.size(); i++) {
-                    Course course = courses.get(i);
-
+                for(Course course : courses) {
                     if(course.getSelectedLecture() != null) {
-                        // Schedule has been built
-
                         for (Meeting meeting : course.getSelectedLecture().getMeetings()) {
-                            for(Time time : meeting.getTimes()) {
-                                WeekViewEvent event = new WeekViewEvent(0, course.getId(), convertTime(time.getStart()), convertTime(time.getEnd()));
+                            for (Time time : meeting.getTimes()) {
+                                WeekViewEvent event = new WeekViewEvent(
+                                        0,
+                                        course.getId(),
+                                        convertTime(time.getStart()),
+                                        convertTime(time.getEnd())
+                                );
                                 event.setColor(course.getColor());
                                 events.add(event);
                             }
                         }
+                    }
 
-                        if(course.getSelectedDiscussion() != null) {
-                            for (Meeting meeting : course.getSelectedDiscussion().getMeetings()) {
-                                for (Time time : meeting.getTimes()) {
-                                    WeekViewEvent event = new WeekViewEvent(0, course.getId(), convertTime(time.getStart()), convertTime(time.getEnd()));
-                                    event.setColor(course.getColor());
-                                    events.add(event);
-                                }
+                    if(course.getSelectedDiscussion() != null) {
+                        for (Meeting meeting : course.getSelectedDiscussion().getMeetings()) {
+                            for (Time time : meeting.getTimes()) {
+                                WeekViewEvent event = new WeekViewEvent(
+                                        0,
+                                        course.getId(),
+                                        convertTime(time.getStart()),
+                                        convertTime(time.getEnd())
+                                );
+                                event.setColor(course.getColor());
+                                events.add(event);
+                            }
+                        }
+                    }
+
+                    if(course.getSelectedLab() != null) {
+                        for (Meeting meeting : course.getSelectedLab().getMeetings()) {
+                            for (Time time : meeting.getTimes()) {
+                                WeekViewEvent event = new WeekViewEvent(
+                                        0,
+                                        course.getId(),
+                                        convertTime(time.getStart()),
+                                        convertTime(time.getEnd())
+                                );
+                                event.setColor(course.getColor());
+                                events.add(event);
                             }
                         }
                     }
@@ -141,8 +181,14 @@ public class ScheduleFragment extends Fragment {
 
     public void setCourses(List<Course> courses) {
         schedule.setCourses(courses);
-        schedule.generate();
 
-        weekView.notifyDatasetChanged();
+        for(Course course : courses) {
+            course.sortSections();
+        }
+
+        schedule.generate();
+        if(schedule.isPossible()) {
+            weekView.notifyDatasetChanged();
+        }
     }
 }

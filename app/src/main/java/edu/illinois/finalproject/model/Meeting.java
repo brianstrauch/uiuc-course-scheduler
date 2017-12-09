@@ -45,7 +45,7 @@ public class Meeting {
             int endTime = parseTime(end);
             times = new Time[days.length];
             for(int i = 0; i < days.length; i++) {
-                int baseTime = days[i] * 24;
+                int baseTime = days[i] * 24 * 60;
                 times[i] = new Time(baseTime + startTime, baseTime + endTime);
             }
         }

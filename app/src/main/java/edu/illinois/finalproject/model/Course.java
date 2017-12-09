@@ -56,19 +56,19 @@ public class Course implements Parcelable {
     private static int count = 0;
 
     // Default constructor used by SimpleXML
-    public Course() {}
+    public Course() {
+        this.color = COLORS.get(count);
+        // Cycle through colors
+        count = (count + 1) % COLORS.size();
+    }
 
-    public Course(String department, int number) {
-        String url = String.format("https://courses.illinois.edu/cisapp/explorer/schedule/2018/spring/%s/%d.xml?mode=detail", department, number);
+    public Course(String department, String number) {
+        String url = String.format("https://courses.illinois.edu/cisapp/explorer/schedule/2018/spring/%s/%s.xml?mode=detail", department, number);
         try {
             requestURL = new URL(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
-        this.color = COLORS.get(count);
-        // Cycle through colors
-        count = (count + 1) % COLORS.size();
     }
 
     protected Course(Parcel in) {

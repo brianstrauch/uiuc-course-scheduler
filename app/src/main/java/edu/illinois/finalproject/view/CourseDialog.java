@@ -38,7 +38,7 @@ public class CourseDialog extends DialogFragment {
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        Course course = new Course(department.getText().toString(), Integer.parseInt(number.getText().toString()));
+                        Course course = new Course(department.getText().toString(), number.getText().toString());
                         listener.addCourse(course);
                     }
                 })

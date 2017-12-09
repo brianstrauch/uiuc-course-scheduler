@@ -13,16 +13,15 @@ public class DetailedSection {
     @ElementList
     private List<Meeting> meetings;
 
-
     public boolean conflictsWith(DetailedSection other) {
         for (Meeting meeting1 : meetings) {
             for (Meeting meeting2 : other.meetings) {
                 if (meeting1.conflictsWith(meeting2)) {
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     public String getEnrollmentStatus() {

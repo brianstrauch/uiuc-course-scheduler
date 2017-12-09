@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -24,6 +25,8 @@ import edu.illinois.finalproject.controller.CourseAdapter;
 import edu.illinois.finalproject.R;
 
 public class CourseListFragment extends Fragment implements CourseDialog.CourseDialogListener {
+    private View view;
+
     private RecyclerView recyclerView;
     private CourseAdapter courseAdapter;
 
@@ -38,7 +41,7 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.course_list, container, false);
+        view = inflater.inflate(R.layout.course_list, container, false);
 
         courses = new ArrayList<>();
         listener = (CourseListListener) getActivity();
@@ -86,18 +89,23 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
     private class DownloadCourseTask extends AsyncTask<URL, Integer, Course> {
         @Override
         protected Course doInBackground(URL... urls) {
+            System.out.println("Downloading " + urls[0]);
             try {
                 InputStream input = urls[0].openStream();
                 Serializer serializer = new Persister();
                 return serializer.read(Course.class, input);
             } catch (Exception e) {
+                e.printStackTrace();
                 return null;
             }
         }
 
         @Override
         protected void onPostExecute(Course course) {
-            System.out.println("Course: "+course);
+            if(course == null) {
+                Toast.makeText(view.getContext(), "Couldn't fit all classes.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             courses.add(course);
             listener.setCourses(courses);
