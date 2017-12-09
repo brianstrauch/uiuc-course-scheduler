@@ -6,6 +6,8 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,12 +15,16 @@ import java.util.List;
 @Root(strict = false)
 @Namespace(prefix = "ns2")
 public class Course {
+    // TODO: Implement parcelable
+
     @Attribute
     private String id;
     @Element
     private String label;
     @ElementList
     private List<DetailedSection> detailedSections;
+
+    private URL requestURL;
 
     private ArrayList<DetailedSection> lectures;
     private DetailedSection selectedLecture;
@@ -46,11 +52,16 @@ public class Course {
     private int color;
     private static int count = 0;
 
+    // Default constructor used by SimpleXML
     public Course() {}
 
     public Course(String department, int number) {
-        // Replaces XML request
-        id = String.format("%s %d", department, number);
+        String url = String.format("https://courses.illinois.edu/cisapp/explorer/schedule/2018/spring/%s/%d.xml?mode=detail", department, number);
+        try {
+            requestURL = new URL(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
         this.color = COLORS.get(count);
         // Cycle through colors
@@ -72,7 +83,8 @@ public class Course {
             }
 
             Meeting firstListedMeeting = section.getMeetings().get(0);
-            switch(firstListedMeeting.getType().getCode()) {
+            Type type = firstListedMeeting.getType();
+            switch(type.getCode()) {
                 case "LCD": // Lecture Discussion
                 case "LEC": // Lecture
                     lectures.add(section);
@@ -89,7 +101,7 @@ public class Course {
                 case "PKG": // ?
                     break;
                 default:
-                    System.out.println("Unknown class type: " + firstListedMeeting.getType().getCode());
+                    System.out.println("Unknown class type: " + type.getCode());
                     break;
             }
         }
@@ -97,6 +109,10 @@ public class Course {
 
     public String getId() {
         return id;
+    }
+
+    public URL getRequestURL() {
+        return requestURL;
     }
 
     public ArrayList<DetailedSection> getLectures() {
@@ -133,5 +149,9 @@ public class Course {
 
     public void setSelectedLab(DetailedSection selectedLab) {
         this.selectedLab = selectedLab;
+    }
+
+    public int getColor() {
+        return color;
     }
 }

@@ -19,15 +19,22 @@ import java.util.List;
 import java.util.Locale;
 
 import edu.illinois.finalproject.R;
+import edu.illinois.finalproject.model.Course;
+import edu.illinois.finalproject.model.Meeting;
+import edu.illinois.finalproject.model.Schedule;
+import edu.illinois.finalproject.model.Time;
 
 public class ScheduleFragment extends Fragment {
     private WeekView weekView;
+    private Schedule schedule;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.schedule, container, false);
 
         weekView = view.findViewById(R.id.wv_calendar);
         setWeekView();
+
+        schedule = new Schedule();
 
         return view;
     }
@@ -52,6 +59,35 @@ public class ScheduleFragment extends Fragment {
                 // Only load current month
                 if(newMonth != Calendar.getInstance().get(Calendar.MONTH) + 1) {
                     return events;
+                }
+
+                List<Course> courses = schedule.getCourses();
+                if(courses == null) return events; // TODO: Remove
+
+                for(int i = 0; i < courses.size(); i++) {
+                    Course course = courses.get(i);
+
+                    if(course.getSelectedLecture() != null) {
+                        // Schedule has been built
+
+                        for (Meeting meeting : course.getSelectedLecture().getMeetings()) {
+                            for(Time time : meeting.getTimes()) {
+                                WeekViewEvent event = new WeekViewEvent(0, course.getId(), convertTime(time.getStart()), convertTime(time.getEnd()));
+                                event.setColor(course.getColor());
+                                events.add(event);
+                            }
+                        }
+
+                        if(course.getSelectedDiscussion() != null) {
+                            for (Meeting meeting : course.getSelectedDiscussion().getMeetings()) {
+                                for (Time time : meeting.getTimes()) {
+                                    WeekViewEvent event = new WeekViewEvent(0, course.getId(), convertTime(time.getStart()), convertTime(time.getEnd()));
+                                    event.setColor(course.getColor());
+                                    events.add(event);
+                                }
+                            }
+                        }
+                    }
                 }
 
                 return events;
@@ -83,5 +119,30 @@ public class ScheduleFragment extends Fragment {
                 }
             }
         });
+    }
+
+    // Convert integer to calendar object
+    private Calendar convertTime(int time) {
+        Calendar calendar = Calendar.getInstance();
+
+        int minute = time % 60;
+        calendar.set(Calendar.MINUTE, minute);
+        time /= 60;
+
+        int hour = time % 24;
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        time /= 24;
+
+        int day = Calendar.MONDAY + time;
+        calendar.set(Calendar.DAY_OF_WEEK, day);
+
+        return calendar;
+    }
+
+    public void setCourses(List<Course> courses) {
+        schedule.setCourses(courses);
+        schedule.generate();
+
+        weekView.notifyDatasetChanged();
     }
 }

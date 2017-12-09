@@ -28,9 +28,8 @@ public class Meeting {
     @Element
     private String daysOfTheWeek;
 
-    private int[] startTimes;
-    private int[] endTimes;
     private int[] days;
+    private Time[] times;
 
     // Convert days and start / end time into integers representing
     // the number of minutes since 12 AM on Monday.
@@ -44,10 +43,10 @@ public class Meeting {
         int startTime = parseTime(start);
         int endTime = parseTime(end);
 
-        startTimes = new int[days.length];
+        times = new Time[days.length];
         for(int i = 0; i < days.length; i++) {
-            startTimes[i] = days[i] * 24 + startTime;
-            endTimes[i] = days[i] * 24 + endTime;
+            int baseTime = days[i] * 24;
+            times[i] = new Time(baseTime + startTime, baseTime + endTime);
         }
     }
 
@@ -85,11 +84,10 @@ public class Meeting {
         return Pattern.matches("\\d\\d:\\d\\d (PM|AM)", time);
     }
 
-    // TODO: Check logic
     public boolean conflictsWith(Meeting other) {
-        for(int i = 0; i < days.length; i++) {
-            for(int j = 0; j < other.days.length; j++) {
-                if(!(other.endTimes[j] < startTimes[i] || endTimes[i] < other.startTimes[j])) {
+        for(Time time1 : times) {
+            for(Time time2 : other.times) {
+                if(time1.conflictsWith(time2)) {
                     return true;
                 }
             }
@@ -99,6 +97,10 @@ public class Meeting {
 
     public Type getType() {
         return type;
+    }
+
+    public Time[] getTimes() {
+        return times;
     }
 }
 

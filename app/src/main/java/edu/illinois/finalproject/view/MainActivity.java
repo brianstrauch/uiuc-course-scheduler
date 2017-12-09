@@ -8,11 +8,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.List;
+
 import edu.illinois.finalproject.R;
+import edu.illinois.finalproject.model.Course;
 import edu.illinois.finalproject.view.CourseListFragment;
 import edu.illinois.finalproject.view.ScheduleFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CourseListFragment.CourseListListener {
     private Adapter adapter;
     private ViewPager viewPager;
     private TabLayout tabLayout;
@@ -29,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    public void setCourses(List<Course> courses) {
+        String tag = "android:switcher:"+R.id.view_pager+":1";
+        ScheduleFragment scheduleFragment = (ScheduleFragment) getSupportFragmentManager().findFragmentByTag(tag);
+        scheduleFragment.setCourses(courses);
     }
 
     public class Adapter extends FragmentPagerAdapter {
