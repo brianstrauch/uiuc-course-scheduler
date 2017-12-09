@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,6 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +36,7 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
     private FloatingActionButton addButton;
 
     private CourseListListener listener;
+
     public interface CourseListListener {
         void setCourses(List<Course> courses);
     }
@@ -63,6 +64,24 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
         // Layout Manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+
+                courses.remove(position);
+                listener.setCourses(courses);
+                courseAdapter.notifyItemRemoved(position);
+            }
+        };
+
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
 
     private void setAddButton() {
@@ -102,7 +121,7 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
 
         @Override
         protected void onPostExecute(Course course) {
-            if(course == null) {
+            if (course == null) {
                 Toast.makeText(view.getContext(), "Couldn't fit all classes.", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -112,7 +131,6 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
 
             int end = courses.size() - 1;
             courseAdapter.notifyItemInserted(end);
-            recyclerView.smoothScrollToPosition(end);
         }
     }
 }
