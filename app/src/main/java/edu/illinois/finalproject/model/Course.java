@@ -1,5 +1,8 @@
 package edu.illinois.finalproject.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -14,13 +17,13 @@ import java.util.List;
 
 @Root(strict = false)
 @Namespace(prefix = "ns2")
-public class Course {
-    // TODO: Implement parcelable
-
+public class Course implements Parcelable {
     @Attribute
     private String id;
     @Element
     private String label;
+    @Element
+    private String description;
     @ElementList
     private List<DetailedSection> detailedSections;
 
@@ -68,6 +71,38 @@ public class Course {
         count = (count + 1) % COLORS.size();
     }
 
+    protected Course(Parcel in) {
+        id = in.readString();
+        label = in.readString();
+        description = in.readString();
+        color = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(label);
+        dest.writeString(description);
+        dest.writeInt(color);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Course> CREATOR = new Creator<Course>() {
+        @Override
+        public Course createFromParcel(Parcel in) {
+            return new Course(in);
+        }
+
+        @Override
+        public Course[] newArray(int size) {
+            return new Course[size];
+        }
+    };
+
     // Group sections by lectures and discussions / labs
     public void sortSections() {
         lectures = new ArrayList<>();
@@ -109,6 +144,14 @@ public class Course {
 
     public String getId() {
         return id;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public URL getRequestURL() {

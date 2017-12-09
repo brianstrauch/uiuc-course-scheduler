@@ -6,6 +6,8 @@ public class Schedule {
     private List<Course> courses;
 
     public void generate() {
+        // TODO: Change algorithm to DFS
+
         for (Course course : courses) {
             course.sortSections();
 

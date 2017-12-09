@@ -87,7 +87,6 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
         @Override
         protected Course doInBackground(URL... urls) {
             try {
-                System.out.println("Downloading " + urls[0].toString());
                 InputStream input = urls[0].openStream();
                 Serializer serializer = new Persister();
                 return serializer.read(Course.class, input);
@@ -98,6 +97,8 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
 
         @Override
         protected void onPostExecute(Course course) {
+            System.out.println("Course: "+course);
+
             courses.add(course);
             listener.setCourses(courses);
 

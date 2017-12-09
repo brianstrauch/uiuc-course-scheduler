@@ -23,9 +23,9 @@ public class Meeting {
     private Type type;
     @Element
     private String start;
-    @Element
+    @Element(required = false)
     private String end;
-    @Element
+    @Element(required = false)
     private String daysOfTheWeek;
 
     private int[] days;
@@ -41,12 +41,13 @@ public class Meeting {
         }
 
         int startTime = parseTime(start);
-        int endTime = parseTime(end);
-
-        times = new Time[days.length];
-        for(int i = 0; i < days.length; i++) {
-            int baseTime = days[i] * 24;
-            times[i] = new Time(baseTime + startTime, baseTime + endTime);
+        if(end != null) {
+            int endTime = parseTime(end);
+            times = new Time[days.length];
+            for(int i = 0; i < days.length; i++) {
+                int baseTime = days[i] * 24;
+                times[i] = new Time(baseTime + startTime, baseTime + endTime);
+            }
         }
     }
 
