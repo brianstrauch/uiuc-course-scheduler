@@ -1,4 +1,4 @@
-package edu.illinois.finalproject;
+package edu.illinois.finalproject.controller;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,9 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.List;
+
+import edu.illinois.finalproject.view.CourseDetailActivity;
+import edu.illinois.finalproject.R;
+import edu.illinois.finalproject.model.Course;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHolder> {
     private List<Course> courses;

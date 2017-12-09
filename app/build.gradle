@@ -30,4 +30,5 @@ dependencies {
 
     implementation 'com.android.support:design:26.1.0'
     compile 'com.github.alamkanak:android-week-view:1.2.6'
+    implementation 'org.simpleframework:simple-xml:2.7.1'
 }

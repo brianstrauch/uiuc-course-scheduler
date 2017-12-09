@@ -1,4 +1,4 @@
-package edu.illinois.finalproject;
+package edu.illinois.finalproject.view;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -7,6 +7,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+
+import edu.illinois.finalproject.R;
+import edu.illinois.finalproject.view.CourseListFragment;
+import edu.illinois.finalproject.view.ScheduleFragment;
 
 public class MainActivity extends AppCompatActivity {
     private Adapter adapter;

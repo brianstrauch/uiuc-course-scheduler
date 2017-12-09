@@ -1,4 +1,4 @@
-package edu.illinois.finalproject;
+package edu.illinois.finalproject.view;
 
 import android.graphics.RectF;
 import android.os.Bundle;
@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import edu.illinois.finalproject.R;
 
 public class ScheduleFragment extends Fragment {
     private WeekView weekView;

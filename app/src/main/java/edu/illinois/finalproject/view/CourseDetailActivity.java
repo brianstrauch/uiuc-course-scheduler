@@ -1,7 +1,9 @@
-package edu.illinois.finalproject;
+package edu.illinois.finalproject.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import edu.illinois.finalproject.R;
 
 public class CourseDetailActivity extends AppCompatActivity {
 

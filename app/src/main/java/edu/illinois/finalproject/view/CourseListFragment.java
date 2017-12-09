@@ -1,4 +1,4 @@
-package edu.illinois.finalproject;
+package edu.illinois.finalproject.view;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.illinois.finalproject.model.Course;
+import edu.illinois.finalproject.controller.CourseAdapter;
+import edu.illinois.finalproject.R;
 
 public class CourseListFragment extends Fragment {
     private RecyclerView recyclerView;
