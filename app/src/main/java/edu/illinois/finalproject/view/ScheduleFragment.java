@@ -45,7 +45,7 @@ public class ScheduleFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && !schedule.isPossible()) {
-            Toast.makeText(view.getContext(), "No possible schedules.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), "Couldn't fit all classes.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -89,7 +89,7 @@ public class ScheduleFragment extends Fragment {
                             for (Time time : meeting.getTimes()) {
                                 WeekViewEvent event = new WeekViewEvent(
                                         0,
-                                        course.getId(),
+                                        course.getId() + " Lecture",
                                         convertTime(time.getStart()),
                                         convertTime(time.getEnd())
                                 );
@@ -104,7 +104,7 @@ public class ScheduleFragment extends Fragment {
                             for (Time time : meeting.getTimes()) {
                                 WeekViewEvent event = new WeekViewEvent(
                                         0,
-                                        course.getId(),
+                                        course.getId() + " Discussion",
                                         convertTime(time.getStart()),
                                         convertTime(time.getEnd())
                                 );
@@ -119,7 +119,7 @@ public class ScheduleFragment extends Fragment {
                             for (Time time : meeting.getTimes()) {
                                 WeekViewEvent event = new WeekViewEvent(
                                         0,
-                                        course.getId(),
+                                        course.getId() + " Lab",
                                         convertTime(time.getStart()),
                                         convertTime(time.getEnd())
                                 );
@@ -188,7 +188,10 @@ public class ScheduleFragment extends Fragment {
 
         schedule.generate();
         if(schedule.isPossible()) {
+            System.out.println("Generated successfully.");
             weekView.notifyDatasetChanged();
         }
+
+        System.out.println(schedule.getCourses().size());
     }
 }

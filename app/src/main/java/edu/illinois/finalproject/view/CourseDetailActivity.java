@@ -1,9 +1,13 @@
 package edu.illinois.finalproject.view;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,7 +17,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.model.Course;
@@ -39,8 +42,13 @@ public class CourseDetailActivity extends AppCompatActivity {
         Intent detailIntent = getIntent();
         course = detailIntent.getParcelableExtra("course");
 
-        database = FirebaseDatabase.getInstance();
-        messageListRef = database.getReference(course.getId());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.setStatusBarColor(course.getColor());
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(course.getColor()));
+//            window.setNavigationBarColor(course.getColor());
+        }
 
         setLabel();
         setId();
@@ -64,6 +72,9 @@ public class CourseDetailActivity extends AppCompatActivity {
     }
 
     private void setComments() {
+        database = FirebaseDatabase.getInstance();
+        messageListRef = database.getReference(course.getId());
+
         comments = findViewById(R.id.tv_comment_list);
         messageListRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -73,16 +84,20 @@ public class CourseDetailActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
 
         comment = findViewById(R.id.et_comment);
@@ -90,7 +105,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(comment.getText().toString().length() > 0) {
+                if (comment.getText().toString().length() > 0) {
                     DatabaseReference messageRef = messageListRef.push();
                     messageRef.setValue(comment.getText().toString());
                     comment.setText("");
@@ -98,5 +113,5 @@ public class CourseDetailActivity extends AppCompatActivity {
             }
         });
     }
-    
+
 }

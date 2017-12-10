@@ -77,6 +77,7 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
 
                 courses.remove(position);
                 listener.setCourses(courses);
+
                 courseAdapter.notifyItemRemoved(position);
             }
         };

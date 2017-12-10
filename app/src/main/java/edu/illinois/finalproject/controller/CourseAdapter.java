@@ -2,6 +2,7 @@ package edu.illinois.finalproject.controller;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,17 +54,21 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
     }
 
     public class CourseHolder extends RecyclerView.ViewHolder {
+        private View view;
         private TextView label;
         private TextView id;
 
         public CourseHolder(View view) {
             super(view);
+            this.view = view;
 
             label = view.findViewById(R.id.tv_course_label);
             id = view.findViewById(R.id.tv_course_id);
         }
 
         public void populate(Course course) {
+            view.setBackground(new ColorDrawable(course.getColor()));
+
             label.setText(course.getLabel());
             id.setText(course.getId());
         }

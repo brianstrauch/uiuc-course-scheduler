@@ -24,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
 
         app:noOfVisibleDays="5"
-        app:textSize="16sp"
+        app:textSize="14sp"
         app:todayBackgroundColor="@android:color/background_light"
         app:todayHeaderTextColor="@android:color/black"
 

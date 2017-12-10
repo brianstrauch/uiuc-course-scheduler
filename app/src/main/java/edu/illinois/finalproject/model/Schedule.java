@@ -12,62 +12,62 @@ public class Schedule {
 
     public void generate() {
         System.out.println("Generating...");
-        possible = generateHelper(0);
+        generateHelper(0);
         System.out.println("Schedule possible? " + possible);
     }
 
-    public boolean generateHelper(int i) {
+    private boolean generateHelper(int i) {
         if(i == courses.size()) {
             return true;
         }
-        Course course = courses.get(i);
 
-        // Lecture
+        Course course = courses.get(i);
+        setLecture(course);
+
+        return generateHelper(i + 1);
+    }
+
+    private boolean setLecture(Course course) {
         if (course.getLectures().size() > 0) {
-            boolean success = false;
             for (DetailedSection lecture : course.getLectures()) {
                 if (canBeAdded(lecture)) {
                     course.setSelectedLecture(lecture);
-                    success = true;
-                    break;
+                    if(setDiscussion(course)) {
+                        return true;
+                    }
                 }
             }
-            if(!success) {
-                return false;
-            }
+            return false;
         }
+        return setDiscussion(course);
+    }
 
-        // Discussion
+    private boolean setDiscussion(Course course) {
         if (course.getDiscussions().size() > 0) {
-            boolean success = false;
             for (DetailedSection discussion : course.getDiscussions()) {
                 if (canBeAdded(discussion)) {
                     course.setSelectedDiscussion(discussion);
-                    success = true;
-                    break;
+                    if(setLab(course)) {
+                        return true;
+                    }
                 }
             }
-            if(!success) {
-                return false;
-            }
+            return false;
         }
+        return setLab(course);
+    }
 
-        // Lab
+    private boolean setLab(Course course) {
         if (course.getLabs().size() > 0) {
-            boolean success = false;
             for (DetailedSection lab : course.getLabs()) {
                 if (canBeAdded(lab)) {
                     course.setSelectedLab(lab);
-                    success = true;
-                    break;
+                    return true;
                 }
             }
-            if(!success) {
-                return false;
-            }
+            return false;
         }
-
-        return generateHelper(i + 1);
+        return true;
     }
 
     private boolean canBeAdded(DetailedSection newSection) {
