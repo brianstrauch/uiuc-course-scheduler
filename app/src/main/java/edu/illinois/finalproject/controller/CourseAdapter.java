@@ -66,6 +66,10 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
             id = view.findViewById(R.id.tv_course_id);
         }
 
+        /**
+         * Set color of list item and write class name and number
+         * @param course The course to display
+         */
         public void populate(Course course) {
             view.setBackground(new ColorDrawable(course.getColor()));
 

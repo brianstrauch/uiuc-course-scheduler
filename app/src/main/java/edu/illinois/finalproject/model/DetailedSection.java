@@ -8,11 +8,14 @@ import java.util.List;
 
 @Root(strict = false)
 public class DetailedSection {
-    @Element
-    private String enrollmentStatus;
     @ElementList
     private List<Meeting> meetings;
 
+    /**
+     * Determines if there is an overlap between two sections
+     * @param other The section being compared to this section
+     * @return If there is a schedule conflict
+     */
     public boolean conflictsWith(DetailedSection other) {
         for (Meeting meeting1 : meetings) {
             for (Meeting meeting2 : other.meetings) {
@@ -22,10 +25,6 @@ public class DetailedSection {
             }
         }
         return false;
-    }
-
-    public String getEnrollmentStatus() {
-        return enrollmentStatus;
     }
 
     public List<Meeting> getMeetings() {

@@ -62,8 +62,23 @@ public class Course implements Parcelable {
         count = (count + 1) % COLORS.size();
     }
 
+    // Constructor used when user adds a class
     public Course(String department, String number) {
-        String url = String.format("https://courses.illinois.edu/cisapp/explorer/schedule/2018/spring/%s/%s.xml?mode=detail", department, number);
+        buildURL(department, number);
+    }
+
+    /**
+     * Sets the URL used to download course data from the API
+     * @param department The course department (Ex: 'CS')
+     * @param number The course number (Ex: '126')
+     */
+    private void buildURL(String department, String number) {
+        String url = String.format(
+                "https://courses.illinois.edu/cisapp/explorer/schedule/2018/spring/%s/%s.xml?mode=detail",
+                department,
+                number
+        );
+
         try {
             requestURL = new URL(url);
         } catch (MalformedURLException e) {
@@ -103,22 +118,23 @@ public class Course implements Parcelable {
         }
     };
 
-    // Group sections by lectures and discussions / labs
+    /**
+     * Group a course's sections by lectures, discussions, and labs
+     */
     public void sortSections() {
         lectures = new ArrayList<>();
         discussions = new ArrayList<>();
         labs = new ArrayList<>();
 
         for(DetailedSection section : detailedSections) {
-            // TODO: Closed sections
-
-            // TODO: Remove
             for(Meeting meeting : section.getMeetings()) {
                 meeting.init();
             }
 
             Meeting firstListedMeeting = section.getMeetings().get(0);
             Type type = firstListedMeeting.getType();
+
+            // Uses fallthrough technique
             switch(type.getCode()) {
                 case "LCD": // Lecture Discussion
                 case "LEC": // Lecture
@@ -133,10 +149,9 @@ public class Course implements Parcelable {
                     labs.add(section);
                     break;
                 case "ONL": // Online
-                case "PKG": // ?
+                case "PKG": // Package
                     break;
                 default:
-                    System.out.println("Unknown class type: " + type.getCode());
                     break;
             }
         }

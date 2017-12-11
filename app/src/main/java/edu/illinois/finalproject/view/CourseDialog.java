@@ -31,7 +31,6 @@ public class CourseDialog extends DialogFragment {
 
         listener = (CourseDialogListener) getTargetFragment();
 
-        // TODO: Dim the "Add" button until valid data has been entered
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view)
                 .setTitle("Add Course")

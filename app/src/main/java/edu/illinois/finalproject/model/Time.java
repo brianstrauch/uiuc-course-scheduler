@@ -9,6 +9,11 @@ public class Time {
         this.end = end;
     }
 
+    /**
+     * Determines if there is an overlap between two times
+     * @param other The time being compared to this time
+     * @return If there is an overlap in times
+     */
     public boolean conflictsWith(Time other) {
         if(end < other.start) return false;
         if(other.end < start) return false;

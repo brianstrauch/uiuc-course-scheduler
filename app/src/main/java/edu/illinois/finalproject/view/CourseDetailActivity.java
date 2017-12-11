@@ -1,6 +1,5 @@
 package edu.illinois.finalproject.view;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -42,35 +41,47 @@ public class CourseDetailActivity extends AppCompatActivity {
         Intent detailIntent = getIntent();
         course = detailIntent.getParcelableExtra("course");
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.setStatusBarColor(course.getColor());
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(course.getColor()));
-//            window.setNavigationBarColor(course.getColor());
         }
 
+        // Populate
         setLabel();
         setId();
         setDescription();
         setComments();
     }
 
+    /**
+     * Populates the label (name of course)
+     */
     private void setLabel() {
         label = findViewById(R.id.tv_label);
         label.setText(course.getLabel());
     }
 
+    /**
+     * Populates the id (Ex: CS 126)
+     */
     private void setId() {
         id = findViewById(R.id.tv_id);
         id.setText(course.getId());
     }
 
+    /**
+     * Populates the lengthy description of the course
+     */
     private void setDescription() {
         description = findViewById(R.id.tv_description);
         description.setText(course.getDescription());
     }
 
+    /**
+     * Load comments from database, populate comment section and post button, and add listeners to
+     * send comments to the database
+     */
     private void setComments() {
         database = FirebaseDatabase.getInstance();
         messageListRef = database.getReference(course.getId());

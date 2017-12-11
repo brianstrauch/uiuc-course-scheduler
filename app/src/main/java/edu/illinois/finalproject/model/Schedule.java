@@ -10,23 +10,24 @@ public class Schedule {
         possible = true;
     }
 
+    /**
+     * Greedily picks lectures, discussions, and labs, one course at a time.
+     */
     public void generate() {
-        System.out.println("Generating...");
-        generateHelper(0);
-        System.out.println("Schedule possible? " + possible);
-    }
-
-    private boolean generateHelper(int i) {
-        if(i == courses.size()) {
-            return true;
+        for(Course course : courses) {
+            if(!setLecture(course)) {
+                possible = false;
+                return;
+            }
         }
-
-        Course course = courses.get(i);
-        setLecture(course);
-
-        return generateHelper(i + 1);
+        possible = true;
     }
 
+    /**
+     * Greedily picks a lecture, and if successful, goes on to pick a discussion
+     * @param course The course providing lectures
+     * @return If a lecture was successfully added to the schedule.
+     */
     private boolean setLecture(Course course) {
         if (course.getLectures().size() > 0) {
             for (DetailedSection lecture : course.getLectures()) {
@@ -42,6 +43,11 @@ public class Schedule {
         return setDiscussion(course);
     }
 
+    /**
+     * Greedily picks a discussion, and if successful, goes on to pick a lab
+     * @param course The course providing discussions
+     * @return If a discussion was successfully added to the schedule.
+     */
     private boolean setDiscussion(Course course) {
         if (course.getDiscussions().size() > 0) {
             for (DetailedSection discussion : course.getDiscussions()) {
@@ -57,6 +63,11 @@ public class Schedule {
         return setLab(course);
     }
 
+    /**
+     * Greedily picks a lab
+     * @param course The course providing labs
+     * @return If a lab was successfully added to the schedule.
+     */
     private boolean setLab(Course course) {
         if (course.getLabs().size() > 0) {
             for (DetailedSection lab : course.getLabs()) {
@@ -70,6 +81,12 @@ public class Schedule {
         return true;
     }
 
+    /**
+     * Attempts to add a section of a course to the schedule, by checking for conflicts against
+     * all other courses that have been added.
+     * @param newSection The section that is being added
+     * @return If the section was fit successfully
+     */
     private boolean canBeAdded(DetailedSection newSection) {
         for (Course course : courses) {
             // Lecture

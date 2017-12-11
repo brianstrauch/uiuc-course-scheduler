@@ -31,8 +31,10 @@ public class Meeting {
     private int[] days;
     private Time[] times;
 
-    // Convert days and start / end time into integers representing
-    // the number of minutes since 12 AM on Monday.
+    /**
+     * Convert days and start / end time into integers representing the number of minutes since
+     * 12 AM on Monday.
+     */
     public void init() {
         if(daysOfTheWeek != null) {
             // API always gives a length 7 string.
@@ -51,6 +53,9 @@ public class Meeting {
         }
     }
 
+    /**
+     * Records which days a class meets from a string like "MWF" (Monday, Wednesday, and Friday)
+     */
     private void parseDays() {
         days = new int[daysOfTheWeek.length()];
         for(int i = 0; i < days.length; i++) {
@@ -60,6 +65,11 @@ public class Meeting {
         }
     }
 
+    /**
+     * Converts a time string from the API into an integer.
+     * @param time The formatted time (Ex: 02:00 PM)
+     * @return An integer representing the minutes since Monday at 00:00
+     */
     private int parseTime(String time) {
         if (!validTime(time)) {
             return -1;
@@ -81,10 +91,21 @@ public class Meeting {
         return 60 * hours + minutes;
     }
 
+    /**
+     * Determines if the time provided is in the same format as in the API;
+     * filters out times such as "ARRANGED" or "TO BE DETERMINED"
+     * @param time The string representing the current time (Ex: 02:00 PM)
+     * @return If the time is formatted correctly
+     */
     private boolean validTime(String time) {
         return Pattern.matches("\\d\\d:\\d\\d (PM|AM)", time);
     }
 
+    /**
+     * Determines if there is an overlap between two meetings
+     * @param other The meeting being compared to this meeting
+     * @return If there is a schedule conflict
+     */
     public boolean conflictsWith(Meeting other) {
         for(Time time1 : times) {
             for(Time time2 : other.times) {

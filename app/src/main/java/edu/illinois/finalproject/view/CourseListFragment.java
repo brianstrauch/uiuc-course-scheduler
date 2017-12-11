@@ -56,6 +56,9 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
         return view;
     }
 
+    /**
+     * Creates the recycler view, allowing swipe to delete functionality.
+     */
     private void setRecyclerView() {
         // Adapter
         courseAdapter = new CourseAdapter(courses);
@@ -85,6 +88,9 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
 
+    /**
+     * Create the add button, which opens an "Add Course" dialog.
+     */
     private void setAddButton() {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +100,9 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
         });
     }
 
+    /**
+     * Initialize and display an "Add Course" dialog
+     */
     private void openDialog() {
         CourseDialog addCourseDialog = new CourseDialog();
         addCourseDialog.setTargetFragment(this, 0);
@@ -123,7 +132,7 @@ public class CourseListFragment extends Fragment implements CourseDialog.CourseD
         @Override
         protected void onPostExecute(Course course) {
             if (course == null) {
-                Toast.makeText(view.getContext(), "Couldn't fit all classes.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Couldn't retrieve class info.", Toast.LENGTH_SHORT).show();
                 return;
             }
 

@@ -42,6 +42,7 @@ public class ScheduleFragment extends Fragment {
         return view;
     }
 
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && !schedule.isPossible()) {
@@ -49,6 +50,9 @@ public class ScheduleFragment extends Fragment {
         }
     }
 
+    /**
+     * Display all events in the calendar.
+     */
     private void setWeekView() {
         // Put Monday at 8AM the top left.
         Calendar monday = Calendar.getInstance();
@@ -161,7 +165,11 @@ public class ScheduleFragment extends Fragment {
         });
     }
 
-    // Convert integer to calendar object
+    /**
+     * Convert a time integer to a calendar object so it can easily be added to the calendar.
+     * @param time The time in minutes since Monday at 00:00.
+     * @return The calendar object representing the start / end of a meeting.
+     */
     private Calendar convertTime(int time) {
         Calendar calendar = Calendar.getInstance();
 
@@ -179,6 +187,10 @@ public class ScheduleFragment extends Fragment {
         return calendar;
     }
 
+    /**
+     * Update the list of courses and generate a schedule.
+     * @param courses The list of courses
+     */
     public void setCourses(List<Course> courses) {
         schedule.setCourses(courses);
 
@@ -188,10 +200,7 @@ public class ScheduleFragment extends Fragment {
 
         schedule.generate();
         if(schedule.isPossible()) {
-            System.out.println("Generated successfully.");
             weekView.notifyDatasetChanged();
         }
-
-        System.out.println(schedule.getCourses().size());
     }
 }
